@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="app">
+        <appmain></appmain>>
+    </div>
+
+    <!-- 1.引包 -->
+    <script type="text/javascript" src="./dist/vue.js"></script>
+    <!-- 2.创建实例对象 -->
+    <script type="text/javascript">
+/*    --------------------- 
+本练习来源于以下作者
+作者：weixin_33943836 
+来源：CSDN 
+原文：https://blog.csdn.net/weixin_33943836/article/details/88155669
+ */
+		//data to be put into the form
+        Vue.component('appmain',{
+            data:function(){
+                return{
+                    list:[
+                        {name: 'apple', price: 3, number: 2, sub: 0},
+                        {name: 'pear', price: 4, number: 3, sub: 0},
+                        {name: 'banana', price: 5, number: 4, sub: 0}
+                        ]
+                }
+            },
+            template:`
+                <div class = "container">
+                    <table class="testTable" border="1">
+                        <thead>
+                            <tr>
+                                <th class="text-center">编号</th>
+                                <th class="text-center">名称</th>
+                                <th class="text-center">单价</th>
+                                <th class="text-center">数量</th>
+                                <th class="text-center">总价</th>
+                            </tr>
+                        </thead>
+                    <new-tr v-bind:arrs="list"></new-tr>        
+                    </table>
+                </div>
+            `
+            //new-tr is used to add new info
+        })
+
+        //by using props, we can pass the data from list to prop and use the data in the new lines
+        Vue.component('new-tr',{
+            props: ['arrs'],
+            template:`
+                <tbody>
+                <tr v-for="(value, index) in arrs">
+                    <td>{{index+1}}</td>
+                    <td>{{value.name}}</td>
+                    <td>{{value.price}}</td>
+                    <td>
+                        <button @click='add(index)' >+</button>    
+                        <span>{{value.number}}</span>
+                        <button @click='subtr(index)' >-</button>
+                    </td>
+                    <td>{{value.sub=value.price*value.number}}</td>
+                </tr>
+                <tr>
+                    <td colspan="5">total price: {{ sum=settotal() }} </td>
+                </tr>
+                </tbody>
+            `,                        
+            data:function(){
+                return{
+
+                }
+            },
+            methods:{
+                add: function(index){
+                   this.arrs[index].number++;
+                   this.arrs[index].sub=this.arrs[index].number*this.arrs[index].price;
+                   this.settotal();     
+                },
+                //subtr is used to subtract the number of the items    
+                subtr: function(index){
+                    if(this.arrs[index].number >0 )       //can only subtract when the number is positive
+                        this.arrs[index].number--;
+                    else
+                        alert('subtracting unsuccessful, the number cannot be negative ');
+                    
+                    this.arrs[index].sub= this.arrs[index].number*this.arrs[index].price;        //update the sub with current number value
+                    this.settotal();    
+                },
+				//need to call setTotal everytime an add or subtract is called
+                settotal: function(){
+                    for(var i =0, tot = 0; i < this.arrs.length; i++){
+                        tot += this.arrs[i].sub;
+                    }
+                    console.log(tot);
+                    this.sum = tot;
+                    return this.sum;                //because it needs to return a value so that the sum value can be rendered in the webpage
+                }
+            }
+
+            
+        })
+
+        new Vue({
+         el:'#app'
+         })
+
+    </script>
+
+
+</body>
+</html>
